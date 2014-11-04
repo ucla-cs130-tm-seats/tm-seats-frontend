@@ -27,22 +27,32 @@ function drawMap(shape) {
 		.style('stroke', '#660000')
 		.style('fill', 'green');
 		
-	drawLables(shape['labels']);	
+	drawLabels(shape['labels']);	
 }
 
-function drawLables(labels) {
+function drawLabels(labels) {
 
 	for (var i = 0; i < labels.length; i++) {
 		var label = labels[i];
 		var style = getStyle(label['styleId']);
-								
+		
+		// The font style is 'arialebold' which is not recognized 
+		// invidually by a style element, therefore it is manually
+		// broken up here, maybe need to consider a way to parse
+		// the font attribute 
+		
+		// also, SVG orders drawings by the way they appear in the document
+		// right now, text is being cutoff because later shapes are being added
+		// might need to find a way to order the adding of data to the document
+		
 		svg.append('text')
 			.attr('x', label['x'])
 			.attr('y', label['y'])
 			.attr('transform', 'rotate(' + label['angle'] + ')')
-			.style('fill', style['color'])
-			.style('font-size', style['size'])
-			.style('font-family', style['font'])
+			.style('fill', '#' + style['color'])
+			.style('font-size', style['size'] + 'px')
+			.style('font-weight', 'bold')
+			.style('font-family', 'arial')
 			.text(label['text']);
 	}
 }
