@@ -1,10 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="utf-8">
 <title>Tickemaster ISM</title>
+<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+  $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.geometry.json", {
+    "success": function(data, textStatus, jqXHR) {
+    aa = d3.select("body").append("svg").attr("width","1024").attr("height","768").attr("viewBox","0 0 10240 7680").attr("x","0px").attr("y","0px").append("g");
+      $.each(data.shapes, function(i, ele) {
+        aa.append("path").attr("d",ele.path).attr("stroke","#00cc00").attr("stroke-width",2).attr("fill","#00FF00");
+      });
+    }
+  });
+});
+</script>
 </head>
 <body>
-<object data="http://media.ticketmaster.com/isc/9/57/95732" type="image/svg+xml" width="768" height="1024">
+<object class="map" data="http://media.ticketmaster.com/isc/9/57/95732" type="image/svg+xml" width="1024" height="768">
 </object>
 </body>
 </html>
