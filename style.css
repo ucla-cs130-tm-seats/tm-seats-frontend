@@ -13,3 +13,11 @@
   background-color: lightgrey;
   border-top: 2px solid darkgrey;
 }
+.bottom-bar-button {
+  -ms-transform: rotate(-90deg); /* IE 9 */
+  -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */
+  transform: rotate(-90deg);
+  display: inline;
+  float: right;
+  margin-right: 5px;
+}

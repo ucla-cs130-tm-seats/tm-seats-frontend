@@ -4,7 +4,11 @@ var displaySegment = function() {
   $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21."+seg+".pricing.json", {
     "success": function(data, textStatus, jqXHR) {
       $(".section-id").text(label);
+      if(data.prices[0] !== null && data.prices[0] !== undefined) {
       $(".price").text('$'+data.prices[0].faceValue);
+      } else {
+      $(".price").text('N/A');
+      }
       $(".available-seats").text(data);
     }
   }
@@ -22,6 +26,17 @@ var availToColor = function (avail) {
   }
 };
 $(document).ready(function() {
+  $(".bottom-bar").click(function (e) {
+    if($(this).hasClass("expanded")) {
+      $(".bottom-bar-button").html("&raquo;");
+      $(this).removeClass("expanded");
+      $(this).animate({'height':'60px'}, 300);
+    } else {
+      $(this).addClass("expanded");
+      $(".bottom-bar-button").html("&laquo;");
+      $(this).animate({'height':'150px'}, 300);
+    }
+  });
   $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.availabilitySummary.json", {
     "success": function(data, textStatus, jqXHR) {
       avail = {}
