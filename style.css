@@ -1,0 +1,15 @@
+.section:hover .section-path {
+  fill: #3C3C3C;
+}
+.section {
+  cursor: pointer;
+}
+.bottom-bar {
+  height: 60px;
+  width: 100%;
+  position: fixed;
+  left: 0px;
+  bottom: 0px;
+  background-color: lightgrey;
+  border-top: 2px solid darkgrey;
+}
