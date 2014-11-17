@@ -13,6 +13,8 @@
 			<script src="https://oss.maxcnd.com/html5shiv/3.7.2/html5svhi.min.js"></script>
 			<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
 		<![endif]-->
+		
+		<link rel="stylesheet" href="tmmobile.css">
 	</head>
   
 	<body>	
@@ -22,75 +24,70 @@
 		<div class="container-fluid">
 		
 			<!-- Title -->
-			<div class="row" style="background: linear-gradient(#2f2f2f, black)">
+			<div class="row tmtitle">
 				<div class="col-xs-8">
-					<img src="tmus_logo2x.png" class="img-responsive" alt="ticketmaster" style="padding: 10px"/>
-				</div>
-				<div class="col-xs-4">
-					<p style="alignment: vertical">United States</p>
+					<img src="tmus_logo2x.png" class="img-responsive middle" alt="ticketmaster"/>
 				</div>
 			</div>
 			
 			<!-- Search Bar -->
-			<form class="form-inline" role="form">
-				<div class="form-group">
-					<div class="input-group">
-						<input type="search" class="form-control" placeholder="Enter Artist, Team, or Venue">
-						<div class="input-group-btn">
-							<button type="submit" class="btn btn-default">Go</button>
+			<div class="row venuesearch">
+				<form class="form-inline" role="form">
+					<div class="form-group">
+						<div class="input-group">
+							<input type="search" class="form-control" placeholder="Enter Artist, Team, or Venue">
+							<div class="input-group-btn">
+								<button type="submit" class="btn btn-default">Go</button>
+							</div>
 						</div>
 					</div>
-				</div>
-			</form>
+				</form>
+			</div>
 
 			<!-- Event Info -->
 			<div class="row" style="background: gray">
-				<div class="col-xs-12" style="background: white; margin: 10px">
+				<div style="background: white; margin: 5px; padding: 5px">
 					<div class="row">
-						<p><strong>Eric Church - The Outsiders World Tour</strong></p>
-						<div class="col-xs-4">
+						<p style="text-align: center"><strong>Eric Church - The Outsiders World Tour</strong></p>
+						<div class="col-xs-6">
 							<img src="echurch.jpg" class="img-responsive" alt="pic"/>
 						</div>
-						<div class="col-xs-7">
+						<div class="col-xs-6">
 							<p>Peoria Civic Center</p>
-							<p><small>Peroia, IL<br>
+							<p><small>Peoria, IL<br>
 							   Fri, Nov 21, 2014 07:00 PM</small></p>
 						</div>
 					</div>
 				</div>
 			</div>
-			
-			<!-- Button to Interactive Map -->
-			<button type="button" class="btn btn-info">View SeatMap</button>
 		
 			<!-- Ticket Searching -->
-			<div class="row" style="background: black">
-				<div class="col-xs-12">
-					<p style="color: white">Search for tickets</p>
+			<div class="row" style="background: #111111; padding: 10px 0px">
+				<div class="col-xs-12 ticketsearch">
+					<p>Search for tickets</p>
+					<button type="button" class="btn btn-info">Use SeatMap</button>
 				</div>
 			</div>
 			
-			<div class="row">
+			<div class="row" style="padding: 5px; background: #cccccc">
 				Section
 			</div>
-			<div class="row">
-				<div class="col-xs-12">
-					<select class="form-control">
-						<option>Best available</option>
-						<option>Lower Bowl</option>
-						<option>Main Floor - General Admission</option>
-						<option>Main Floor - Reserved</option>
-						<option>Mezzanine</option>
-						<option>Upper Bowl</option>
-					</select>
-				</div>
+			<div class="row" style="margin: 10px 0px">
+				<select class="form-control">
+					<option>Best available</option>
+					<option>Lower Bowl</option>
+					<option>Main Floor - General Admission</option>
+					<option>Main Floor - Reserved</option>
+					<option>Mezzanine</option>
+					<option>Upper Bowl</option>
+				</select>
 			</div>
-			<div class="row">
+			<div class="row" style="padding: 5px; background: #cccccc">
 				Tickets
 			</div>
-			<div class="row">
+			<div class="row" style="padding: 10px">
 				<p>Full Price Ticket</p>
-				<div class="col-xs-3">
+				<div class="col-xs-4">
 					<select class="form-control">
 						<option>0</option>
 						<option>1</option>
@@ -103,7 +100,7 @@
 						<option>8</option>
 					</select>
 				</div>
-				<div class="col-xs-9">
+				<div class="col-xs-8">
 					<select class="form-control">
 						<option>Any Price</option>
 						<option>US $70.45</option>
@@ -111,8 +108,9 @@
 						<option>US $34.45</option>
 					</select>
 				</div>
-				
-				<button type="button" class="btn btn-default" style="background: linear-gradient(white, green)">Find Tickets</button>
+			</div>
+			<div class="row">
+				<button type="button" class="btn btn-default findticket">Find Tickets</button>
 			</div>
 		</div>
 		

@@ -1,0 +1,56 @@
+.tmtitle {
+	background: linear-gradient(#2f2f2f, black);
+}
+
+img.middle {
+	vertical-align: middle;
+	margin: 10px;
+}
+
+p.middle {
+	vertical-align: middle;
+	padding: 10px;
+}
+
+div.venuesearch {
+	height: 50px;
+	position: relative;
+}
+
+div.venuesearch form {
+	margin: 5px;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -45%)
+}
+
+div.ticketsearch {
+	min-height: 30px;
+	display: table-cell;
+	vertical-align: middle;
+}
+
+div.ticketsearch p {
+	margin: 0;
+	font-size: 20px;
+	color: #aaaaaa;
+	position: absolute;
+	top: 50%;
+	transform: translate(0, -50%);
+}
+
+div.ticketsearch button {
+	float: right;
+	background: linear-gradient(#666666, #333333);
+	border: 0px;
+	border-color: black;
+}
+
+.findticket {
+	display: block;
+	width: 90%;
+	background: linear-gradient(#009900, #006600);
+	color: white;
+	margin-left: auto;
+	margin-right: auto;
+}
