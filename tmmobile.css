@@ -15,6 +15,7 @@ p.middle {
 div.venuesearch {
 	height: 50px;
 	position: relative;
+	background: #cccccc;
 }
 
 div.venuesearch form {
@@ -47,6 +48,7 @@ div.ticketsearch button {
 }
 
 .findticket {
+	padding: 5px;
 	display: block;
 	width: 90%;
 	background: linear-gradient(#009900, #006600);
