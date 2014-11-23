@@ -1,15 +1,45 @@
-.tmtitle {
+div.tmtitle {
 	background: linear-gradient(#2f2f2f, black);
+	height: 45px;
 }
 
-img.middle {
+div.logo {
+	min-height: 40px;
+	display: table-cell;
 	vertical-align: middle;
-	margin: 10px;
 }
 
-p.middle {
-	vertical-align: middle;
-	padding: 10px;
+div.logo input {
+	position: absolute;
+	margin-top: 7px;
+	height: 28px;
+}
+
+div.logo button {
+	margin-top: 6px;
+	float: right;
+	font-weight: bold;
+	background: linear-gradient(#666666, #333333);
+	border: 0px;
+	width: 80px;
+	border-color: black;
+}
+
+.fontstyle {
+	font-family: arial;
+	font-weight: bold;
+}
+
+div.copyright {
+	height: 40px;
+	background: #111111;
+	text-align: center;
+}
+
+div.copyright p {
+	font-size: 10px;
+	color: gray;
+	margin-top: 10px;
 }
 
 div.venuesearch {
@@ -22,11 +52,11 @@ div.venuesearch form {
 	margin: 5px;
 	position: absolute;
 	top: 50%;
-	transform: translate(0, -45%)
+	transform: translate(0, -45%);
 }
 
 div.ticketsearch {
-	min-height: 30px;
+	height: 45px;
 	display: table-cell;
 	vertical-align: middle;
 }
@@ -45,13 +75,104 @@ div.ticketsearch button {
 	background: linear-gradient(#666666, #333333);
 	border: 0px;
 	border-color: black;
+	text-shadow: 1px 1px black;
 }
 
-.findticket {
+button.findticket {
 	display: block;
 	width: 95%;
-	background: linear-gradient(#009900, #006600);
+	font-weight: bold;
+	background: linear-gradient(#0033CC, #0000CC);
 	color: white;
 	margin-left: auto;
 	margin-right: auto;
+	border-color: black;
+	text-shadow: 1px 1px black;
+}
+
+button.buyticket {
+	display: block;
+	width: 95%;
+	font-weight: bold;
+	background: linear-gradient(#009900, #003300);
+	color: white;
+	margin-left: auto;
+	margin-right: auto;
+	border-color: black;
+	text-shadow: 1px 1px black;
+}
+
+div.login {
+	background: white;
+	margin: 5px;
+	padding: 5px;
+}
+
+div.login p {
+	font-size: 20px;
+}
+
+div.login button {
+	margin-left: auto;
+	margin-right: auto;
+	width: 100%;
+	font-weight: bold;
+	background: linear-gradient(#009900, #003300);
+	border-color: black;
+	color: white;
+	text-shadow: 1px 1px black;
+}
+
+div.timer {
+	display: none;
+	vertical-align: middle;
+	background: linear-gradient(#444444, #111111);
+}
+
+div.timer #text {
+	display: inline;
+	color: #EEEEEE;
+	position: absolute;
+	margin-left: -8px;
+	margin-top: 12px;
+}
+
+div.timer #time {
+	display: inline;
+	margin-left: 120px;
+	font-size: 30px;
+	color: red;
+}
+
+div.sectionheader {
+	padding: 5px;
+	background: #cccccc;
+}
+
+div.totalcost {
+	background: #cccccc;
+	min-height: 40px;
+}
+
+div.totalcost #text {
+	position: absolute;
+	margin-top: 13px;
+	margin-left: -1px;
+}
+
+div.totalcost #amt {
+	position: absolute;
+	margin-top: 13px;
+	margin-left: 95px;
+	color: red;
+}
+
+div.totalcost button {
+	float: right;
+	margin: 5px -10px;
+	color: white;
+	font-weight: bold;
+	background: linear-gradient(#00cc00, #006600);
+	border-color: black;
+	text-shadow: 1px 1px black;
 }
