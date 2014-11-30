@@ -176,3 +176,32 @@ div.totalcost button {
 	border-color: black;
 	text-shadow: 1px 1px black;
 }
+
+img.expand {
+	width: 30px;
+	height: 30px;
+}
+
+.extraCost {
+	display: none;
+}
+
+.extraCost table {
+	color: gray;
+}
+
+div.success {
+	height: 40px;
+	text-align: center;
+	font-size: 28px;
+	background: #cccccc;
+	color: green;
+}
+
+div.fail {
+	height: 40px;
+	text-align: center;
+	font-size: 28px;
+	background: #cccccc;
+	color: red;
+}

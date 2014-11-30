@@ -39,6 +39,10 @@ function goCheckout() {
 	window.location.href="checkout.html";
 }
 
+function goOrderFinished() {
+	window.location.href="completed.html";
+}
+
 function findTickets() {
 	var sectionArea = document.getElementById("eventSectionAreas").value;
 	var numTickets = document.getElementById("eventMaxTicketNum").value;
@@ -95,4 +99,12 @@ function convertDate(date) {
 		timeString += seconds;
 	}
 	return timeString;
+}
+
+function toggleInfo(ticket) {
+	$("#tick" + ticket).toggle();
+}
+
+function submitOrder() {
+	goOrderFinished();
 }
