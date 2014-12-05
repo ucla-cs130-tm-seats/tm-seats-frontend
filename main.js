@@ -1,19 +1,103 @@
-var displaySegment = function() {
-  var seg = $(this).data('segment');
-  var label = $(this).data('label');
-  $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21."+seg+".pricing.json", {
-    "success": function(data, textStatus, jqXHR) {
-      $(".section-id").text(label);
-      if(data.prices[0] !== null && data.prices[0] !== undefined) {
-      $(".price").text('$'+data.prices[0].faceValue);
-      } else {
-      $(".price").text('N/A');
-      }
-      $(".available-seats").text(data);
-    }
+var resetSection = function() {
+  if(zoomedTo != null) {
+    zoomedTo.select('g').remove();
+    zoomedTo.select('text').attr('display','block');
+    zoomedTo.on('dblclick', displaySegment);
+    zoomedTo.select('path').attr('fill',oldfill);
+    zoomedTo.select('path').attr('class','section-path');
+    oldfill = null;
   }
-  );
+  zoomedTo = null;
+}
+
+var zoomedTo = null;
+var oldfill = null;
+
+var zoomLevels = [10240, 2560, 640];
+var zoomLevel = 0;
+
+var displaySegment = function() {
+  if(zoomedTo != null && zoomedTo.node() == this) {
+    return;
+  }
+  resetSection();
+  zoomedTo = d3.select(this);
+  if(zoomLevel == 0) {
+    zoomLevel = 1;
+    var bbox = zoomedTo.node().getBBox();
+    zoom(bbox.x + bbox.width/2, bbox.y + bbox.height/2, zoomLevel);
+  }
+  //change the background to be white temporarily and hide text
+  //display the seats
+  $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21." + $(this).data('segment') + ".places.json", {
+    "success": function(data, textStatus, jqXHR) {
+      var g = zoomedTo.append('g').attr('class','seats');
+      zoomedTo.select('text').attr('display','none');
+      oldfill = zoomedTo.select('path').attr('fill');
+      zoomedTo.select('path').attr('fill','white');
+      zoomedTo.select('path').attr('class','section-path-detail');
+      $.each(data.places, function(i, place) {
+        g.append('circle').attr('r',place.size/2).attr('cx',place.x).attr('cy',place.y).attr("class","seatdot");
+      });
+    },
+    "error": function(data, textStatus, jqXHR) {
+      oldfill = zoomedTo.select('path').attr('fill');
+      resetSection();
+    }
+  });
 };
+
+var zoomIn = function() {
+  var coords = d3.mouse(this);
+  zoomLevel = (zoomLevel + 1) % zoomLevels.length;
+  if(zoomLevel == 0) {
+    resetSection();
+  }
+  zoom(coords[0], coords[1], zoomLevel);
+}
+
+var zoom = function(x, y, level) {
+  if(level >= zoomLevels.length) {
+    return;
+  }
+  var width = zoomLevels[level];
+  x -= width / 2;
+  var height = width * 3 / 4;
+  y -= height / 2;
+
+  var viewBox = x + " " + y + " " + width + " " + height;
+  d3.select(".seatmap-background").transition().duration(1000).attr("viewBox", viewBox);
+  d3.select(".seatmap-foreground").transition().duration(1000).attr("viewBox", viewBox);
+}
+
+
+var panDrag = function(d, i) {
+  var bboxs = d3.select('.seatmap-background').attr('viewBox').split(' ');
+  var width = $('.seatmap').width();
+  var height = $('.seatmap').height();
+  var bbox = {
+    'x': bboxs[0],
+    'y': bboxs[1],
+    'width': bboxs[2],
+    'height': bboxs[3]
+  };
+  //convert the dx into viewport dx dy
+  bbox.x -= d3.event.dx / width * bbox.width;
+  bbox.y -= d3.event.dy / height * bbox.height;
+  var viewBox = bbox.x + " " + bbox.y + " " + bbox.width + " " + bbox.height;
+  d3.select(".seatmap-background").attr("viewBox", viewBox);
+  d3.select(".seatmap-foreground").attr("viewBox", viewBox);
+}
+
+var pan = d3.behavior.drag().on('drag', panDrag);
+
+var unzoom = function() {
+  //remove the seats
+  //change back to normal background
+  resetSection();
+  zoom(0);
+}
+
 var availToColor = function (avail) {
   if(avail == 0) {
     return "#999999";
@@ -26,17 +110,6 @@ var availToColor = function (avail) {
   }
 };
 $(document).ready(function() {
-  $(".bottom-bar").click(function (e) {
-    if($(this).hasClass("expanded")) {
-      $(".bottom-bar-button").html("&raquo;");
-      $(this).removeClass("expanded");
-      $(this).animate({'height':'60px'}, 300);
-    } else {
-      $(this).addClass("expanded");
-      $(".bottom-bar-button").html("&laquo;");
-      $(this).animate({'height':'150px'}, 300);
-    }
-  });
   $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.availabilitySummary.json", {
     "success": function(data, textStatus, jqXHR) {
       avail = {}
@@ -45,7 +118,7 @@ $(document).ready(function() {
       });
       $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.geometry.json", {
         "success": function(data, textStatus, jqXHR) {
-          aa = d3.select(".seatmap").append("g");
+          aa = d3.select(".seatmap").append("svg").on('dblclick', zoomIn).call(pan).attr("class","seatmap-foreground").attr("viewBox","0 0 10240 7680").attr("width","100%").append("g");
           $.each(data.shapes, function(i, ele) {
             label = ele.labels[0]
             aaa = aa.append("g").attr("class","section").attr('data-label',label.text).attr('data-segment',ele.segmentId).on('click', displaySegment);

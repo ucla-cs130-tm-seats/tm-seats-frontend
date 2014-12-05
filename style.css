@@ -4,6 +4,18 @@
 .section {
   cursor: pointer;
 }
+.seatmap {
+  position: relative;
+}
+.seatmap-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
+.seatdot {
+  fill: #999999;
+}
 .bottom-bar {
   height: 60px;
   width: 100%;
