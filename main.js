@@ -3,15 +3,12 @@ var resetSection = function() {
     zoomedTo.select('g').remove();
     zoomedTo.select('text').attr('display','block');
     zoomedTo.on('dblclick', displaySegment);
-    zoomedTo.select('path').attr('fill',oldfill);
     zoomedTo.select('path').attr('class','section-path');
-    oldfill = null;
   }
   zoomedTo = null;
 }
 
 var zoomedTo = null;
-var oldfill = null;
 
 var zoomLevels = [10240, 2560, 640];
 var zoomLevel = 0;
@@ -33,15 +30,12 @@ var displaySegment = function() {
     "success": function(data, textStatus, jqXHR) {
       var g = zoomedTo.append('g').attr('class','seats');
       zoomedTo.select('text').attr('display','none');
-      oldfill = zoomedTo.select('path').attr('fill');
-      zoomedTo.select('path').attr('fill','white');
       zoomedTo.select('path').attr('class','section-path-detail');
       $.each(data.places, function(i, place) {
         g.append('circle').attr('r',place.size/2).attr('cx',place.x).attr('cy',place.y).attr("class","seatdot");
       });
     },
     "error": function(data, textStatus, jqXHR) {
-      oldfill = zoomedTo.select('path').attr('fill');
       resetSection();
     }
   });

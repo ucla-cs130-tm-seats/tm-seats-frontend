@@ -14,7 +14,10 @@
   z-index: -1;
 }
 .seatdot {
-  fill: #999999;
+  fill: #3C3C3C;
+}
+.seatdot:hover {
+  fill: #FFFFFF;
 }
 .bottom-bar {
   height: 60px;
