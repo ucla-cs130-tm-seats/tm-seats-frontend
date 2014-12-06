@@ -108,3 +108,11 @@ function toggleInfo(ticket) {
 function submitOrder() {
 	goOrderFinished();
 }
+
+var urlhead = "http://tm-dev.glentaka.com:8000/ticketmaster/";
+function getData() {
+	$.getJSON(urlhead + "/0F004CFCCA844D21/geometry/",
+	function(result) {
+		alert(result);
+	}	
+}
