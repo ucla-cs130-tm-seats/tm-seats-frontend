@@ -114,5 +114,5 @@ function getData() {
 	$.getJSON(urlhead + "/0F004CFCCA844D21/geometry/",
 	function(result) {
 		alert(result);
-	}	
+	});
 }
