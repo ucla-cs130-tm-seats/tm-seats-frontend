@@ -3,6 +3,15 @@ div.tmtitle {
 	height: 45px;
 }
 
+div.tmtitle p {
+	display: none;
+	color: white;
+	margin-top: 8px;
+	float: right;
+	font-size: 12px;
+	text-align: center;
+}
+
 div.logo {
 	min-height: 40px;
 	display: table-cell;
@@ -204,4 +213,13 @@ div.fail {
 	font-size: 28px;
 	background: #cccccc;
 	color: red;
+}
+
+div.loggedout {
+	height: 40px;
+	text-align: center;
+	font-size: 28px;
+	background: #cccccc;
+	color: green;
+	margin-top: 10px;
 }

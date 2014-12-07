@@ -1,5 +1,5 @@
 $(document).ready(function() {
-	
+	checkLogin();
 });
 
 function searchVenue() {
@@ -106,6 +106,15 @@ function getData() {
 	});
 }
 
+function checkLogin() {
+	var user = getCookie("username");
+	if (user) {
+		var innerHTML = user + "<br><a href='logout.html' style='color: gray'>Logout</a>";
+		$("#user").empty().append(innerHTML).toggle();
+		$("#loginbutton").toggle();
+	}
+}
+
 function setLogin() {
 
 	var username = document.getElementById("usernameInput").value;
@@ -144,7 +153,6 @@ function setLogin() {
 	});
 
 	setCookie("username", username, 10);
-	alert(document.cookie);
 }
 
 function isLoggedIn() {
