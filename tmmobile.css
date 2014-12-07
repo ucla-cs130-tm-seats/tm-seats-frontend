@@ -89,7 +89,7 @@ div.ticketsearch button {
 
 button.findticket {
 	display: block;
-	width: 95%;
+	width: 90%;
 	font-weight: bold;
 	background: linear-gradient(#0033CC, #0000CC);
 	color: white;
