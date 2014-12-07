@@ -2,16 +2,7 @@ $(document).ready(function() {
 	checkLogin();
 });
 
-function searchVenue() {
-	var text = document.getElementById("searchText").value;
-	$.get("searchVenue", {
-		text: text
-	}, function(resp) {
-		// redirect to venue list page
-		window.location.href="/venuesearch.html?ids";
-	});
-}
-
+// Redirect Functions
 function goHome() {
 	window.location.href="index.html";	
 }
@@ -32,21 +23,7 @@ function goOrderFinished() {
 	window.location.href="completed.html";
 }
 
-function findTickets() {
-	var sectionArea = document.getElementById("eventSectionAreas").value;
-	var numTickets = document.getElementById("eventMaxTicketNum").value;
-	var eventPrice = document.getElementById("eventPrices").value;
-
-	$.get("findtickets", {
-		area: sectionArea,
-		num: numTickets,
-		price: eventPrice
-	}, function(resp) {
-		// redirect to ticket listing page
-		window.location.href="/ticketlist.html?ids";
-	});
-}
-
+// Timing Functions
 var updateObj;
 function StartTimer(seconds) {
 	var time = new Date();
@@ -90,34 +67,48 @@ function convertDate(date) {
 	return timeString;
 }
 
+// Order Summary Functions
 function toggleInfo(ticket) {
 	$("#tick" + ticket).toggle();
 }
 
-function submitOrder() {
-	goOrderFinished();
-}
-
+// Error Functions
 function setError(error) {
 	$("#errorSection").empty().append(error).show();
 }
 
-var urlhead = "http://tm-dev.glentaka.com:8000/ticketmaster";
-function getData() {
-	$.getJSON(urlhead + "/0F004CFCCA844D21/geometry/",
+// Ticket Search Functions 
+function loadTicketSearch(eventId) {
+	$.getJSON(urlhead + eventId + "/geometry/",
 	function(result) {
-		alert("finished");
+		
+		loadSeatmap(result);
+		
+		var segmentIds = parseSegmentIds(result);
+		loadPrices(segmentIds);
 	});
 }
 
-function checkLogin() {
-	var user = getCookie("username");
-	if (user) {
-		var innerHTML = user + "<br><a href='logout.html' style='color: gray'>Logout</a>";
-		$("#user").empty().append(innerHTML).toggle();
-		$("#loginbutton").toggle();
-	}
+function loadSeatmap(data) {
+
 }
+
+function parseSegmentIds(data) {
+	var shapes = data["shapes"];
+	var segmentIds = new Array(shapes.length);
+	for (var i = 0; i < shapes.length; i++) {
+		segmentIds[i] = shapes[i]["segmentId"];
+		alert(segmentIds[i]);
+	}
+	return segmentIds;
+}
+
+function loadPrices(segmentIds) {
+	alert("not implemented");
+}
+
+// Server Request Functions
+var urlhead = "http://tm-dev.glentaka.com:8000/ticketmaster/";
 
 function setLogin() {
 
@@ -139,10 +130,11 @@ function setLogin() {
 		type : "POST",
 		data : info,
 		success : function (data, status, obj) {
-			alert(data);
 			if (data == "0") {
-				setCookie("username", username);
-				setCookie("password", password);
+				setCookie("username", username, 60);
+				setCookie("password", password, 60);
+				alert("Login Successful");
+				goHome();
 			}
 			else if (data == "1") {
 				// password invalid
@@ -161,19 +153,17 @@ function setLogin() {
 	goHome();
 }
 
-function isLoggedIn() {
-	var status = getCookie("status");
-	if (status == "loggedin") {
-		return true;
+// Login Functions
+function checkLogin() {
+	var user = getCookie("username");
+	if (user) {
+		var innerHTML = user + "<br><a href='logout.html' style='color: gray'>Logout</a>";
+		$("#user").empty().append(innerHTML).toggle();
+		$("#loginbutton").toggle();
 	}
-	return false;
 }
 
-function getUsername() {
-	var username = getCookie("username");
-	return username;
-}
-
+// Cookie Functions
 function setCookie(cname, cvalue, exmin) {
     var d = new Date();
     d.setTime(d.getTime() + (exmin*60*1000));
@@ -190,16 +180,4 @@ function getCookie(cname) {
         if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
     }
      return "";
-}
-
-function checkCookie() {
-    var user = getCookie("username");
-     if (user != "") {
-        alert("Welcome again " + user);
-     } else {
-         user = prompt("Please enter your name:", "");
-         if (user != "" && user != null) {
-             setCookie("username", user, 365);
-         }
-    }
 }
