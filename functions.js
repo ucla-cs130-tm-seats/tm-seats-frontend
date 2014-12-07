@@ -103,10 +103,20 @@ function appendPrice(price) {
 	if (price <= 0 || $.inArray(price, prices) != -1) {
 		return;
 	}
-	alert(price);
+
+	var index = 1;
+	
+	for (var i = 0; i < prices.length; i++) {
+		if (price > prices[i]) {
+			index++;
+		}
+	}
+	alert(index);
+
 	prices[prices.length] = price;
+
 	var formatted = "<option>US $" + price + ".00</option>";
-	$("#eventPrices").append(formatted);
+	$("#eventPrices").children(":nth-child(" + index + ")").after(formatted);
 }
 
 function loadPrices(segmentIds) {
