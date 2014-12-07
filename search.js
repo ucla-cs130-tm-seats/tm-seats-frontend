@@ -113,9 +113,12 @@ function setLogin() {
 
 	username = "username";
 	password = "password";
-	
-	var info = "username:" + username 
-		+ "&password:" + password;
+
+	var info = {};
+
+	info["username"] = username;
+	info["password"] = password;
+
 	$.post(urlhead + "/login/", info, 
 		function (data) {
 			alert(data);
