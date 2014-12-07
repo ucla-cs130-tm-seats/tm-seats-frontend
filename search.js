@@ -1,16 +1,5 @@
 $(document).ready(function() {
-/*
-$.get("eventdata", {
-	eventId: ####
-}, function(resp) {
-	$("#eventImage").append(resp[0]);
-	$("#eventVenue").append(resp[1]);
-	$("#eventLocTime").append(resp[2]);
-	$("#eventSectionAreas").append(resp[3]);
-	$("#eventMaxTicketNum").append(resp[4]);
-	$("#eventPrices").append(resp[5]);
-});
-*/
+	
 });
 
 function searchVenue() {
@@ -118,9 +107,23 @@ function getData() {
 }
 
 function setLogin() {
-	setCookie("status", "loggedin", 10);
-	setCookie("id", "1000", 10);
-	setCookie("username", "ticketuser");
+
+	var username = document.getElementById("usernameInput").value;
+	var password = document.getElementById("passwordInput").value;
+
+	username = "username";
+	password = "password";
+	
+	var info = "username:" + username 
+		+ "&password:" + password;
+	$.post(urlhead + "/login/", info, 
+		function (data) {
+			alert(data);
+		
+			setCookie("status", "loggedin", 10);
+			setCookie("id", data, 10);
+			setCookie("username", username);
+		});
 }
 
 function isLoggedIn() {
