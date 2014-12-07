@@ -125,16 +125,26 @@ function setLogin() {
 		type : "POST",
 		data : info,
 		success : function (data, status, obj) {
-			alert("success");
+			alert(data);
+			if (data == "0") {
+				setCookie("username", username);
+				setCookie("password", password);
+			}
+			else if (data == "1") {
+				// password invalid
+			}
+			else if (data == "2") {
+				// user doesnt exist
+			}
 		},
 		error : function (err, status, obj) {
-			alert("error");
-		},
-		complete : function (obj, status) {
-			alert("complete");
-		},
-		timeout : 500
+			alert("login error");
+			alert(status);
+		}
 	});
+
+	setCookie("username", username, 10);
+	alert(document.cookie);
 }
 
 function isLoggedIn() {
@@ -152,7 +162,7 @@ function getUsername() {
 
 function setCookie(cname, cvalue, exmin) {
     var d = new Date();
-    d.setTime(d.getTime() + (exmin*24*60*60*1000));
+    d.setTime(d.getTime() + (exmin*60*1000));
     var expires = "expires="+d.toUTCString();
     document.cookie = cname + "=" + cvalue + "; " + expires;
  }
