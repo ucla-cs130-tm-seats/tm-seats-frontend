@@ -1,7 +1,3 @@
-$(document).ready(function() {
-	checkLogin();
-});
-
 // Redirect Functions
 function goHome() {
 	window.location.href="index.html";	
@@ -98,13 +94,36 @@ function parseSegmentIds(data) {
 	var segmentIds = new Array(shapes.length);
 	for (var i = 0; i < shapes.length; i++) {
 		segmentIds[i] = shapes[i]["segmentId"];
-		alert(segmentIds[i]);
 	}
 	return segmentIds;
 }
 
+var prices = [];
+function appendPrice(price) {
+	if (price <= 0 || $.inArray(price, prices) != -1) {
+		return;
+	}
+	alert(price);
+	prices[prices.length] = price;
+	var formatted = "<option>US $" + price + ".00</option>";
+	$("#eventPrices").append(formatted);
+}
+
 function loadPrices(segmentIds) {
-	alert("not implemented");
+	for (var i = 0; i < segmentIds.length; i++) {
+		$.ajax({
+			url : urlhead + "get/price/",
+			crossDomain : true,
+			type : "POST",
+			data : {"segment" : segmentIds[i]},
+			success : function(price, status, obj) {
+				appendPrice(price);
+			},
+			error : function(error, status, obj) {
+				alert("error");
+			}
+		});
+	}
 }
 
 // Server Request Functions
@@ -125,7 +144,7 @@ function setLogin() {
 	info["password"] = password;
 
 	$.ajax({
-		url : urlhead + "/login/", 
+		url : urlhead + "login/", 
 		crossDomain : true,
 		type : "POST",
 		data : info,
@@ -137,10 +156,10 @@ function setLogin() {
 				goHome();
 			}
 			else if (data == "1") {
-				// password invalid
+				setError("Invalid Password");
 			}
 			else if (data == "2") {
-				// user doesnt exist
+				setError("User doesn't exist");
 			}
 		},
 		error : function (err, status, obj) {
@@ -148,9 +167,6 @@ function setLogin() {
 			alert(status);
 		}
 	});
-
-	setCookie("username", username, 10);
-	goHome();
 }
 
 // Login Functions
