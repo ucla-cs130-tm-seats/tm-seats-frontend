@@ -111,7 +111,6 @@ function appendPrice(price) {
 			index++;
 		}
 	}
-	alert(index);
 
 	prices[prices.length] = price;
 
