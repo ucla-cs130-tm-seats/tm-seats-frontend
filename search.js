@@ -119,14 +119,22 @@ function setLogin() {
 	info["username"] = username;
 	info["password"] = password;
 
-	$.post(urlhead + "/login/", info, 
-		function (data) {
-			alert(data);
-		
-			setCookie("status", "loggedin", 10);
-			setCookie("id", data, 10);
-			setCookie("username", username);
-		});
+	$.ajax({
+		url : urlhead + "/login/", 
+		crossDomain : true,
+		type : "POST",
+		data : info,
+		success : function (data, status, obj) {
+			alert("success");
+		},
+		error : function (err, status, obj) {
+			alert("error");
+		},
+		complete : function (obj, status) {
+			alert("complete");
+		},
+		timeout : 500
+	});
 }
 
 function isLoggedIn() {
