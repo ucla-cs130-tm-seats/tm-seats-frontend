@@ -33,23 +33,27 @@
   
 	<body class="fontstyle">	
 		<div class="container-fluid">
-					
+
 			<!-- Title -->
 			<div class="row tmtitle">
 				<div class="col-xs-12 logo">
 					<input type="image" src="tmus_logo2x.png" onclick="goHome()" alt="ticketmaster"/>
-					<button id="loginbutton" type="button" class="btn btn-info" onclick="goLogin()" type="submit">Login</button>
 				</div>
 			</div>
 			
+			<!-- Error -->
+			<div id="errorSection" class="row error">
+			</div>
+
 			<div class="row loggedout">
 				Logged Out
 			</div>
-			
+
 			<div class="row" style="padding: 10px">
-				<button class="btn btn-default buyticket" onclick="goHome()">Go Home</button>
+				<button class="btn btn-default gologin" onclick="goLogin()">Login</button>
+				<button class="btn btn-default gohome" onclick="goHome()">Go Home</button>
 			</div>
-			
+
 			<!-- Copyright -->
 			<div class="row copyright">
 				<p>© 1999-2014 Ticketmaster. All rights reserved.</p>

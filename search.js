@@ -98,6 +98,10 @@ function submitOrder() {
 	goOrderFinished();
 }
 
+function setError(error) {
+	$("#errorSection").empty().append(error).show();
+}
+
 var urlhead = "http://tm-dev.glentaka.com:8000/ticketmaster";
 function getData() {
 	$.getJSON(urlhead + "/0F004CFCCA844D21/geometry/",
@@ -120,11 +124,12 @@ function setLogin() {
 	var username = document.getElementById("usernameInput").value;
 	var password = document.getElementById("passwordInput").value;
 
-	username = "username";
-	password = "password";
-
+	if (!username) {
+		setError("Invalid Input");
+		return;
+	}
+	
 	var info = {};
-
 	info["username"] = username;
 	info["password"] = password;
 
@@ -153,6 +158,7 @@ function setLogin() {
 	});
 
 	setCookie("username", username, 10);
+	goHome();
 }
 
 function isLoggedIn() {

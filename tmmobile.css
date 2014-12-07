@@ -111,6 +111,26 @@ button.buyticket {
 	text-shadow: 1px 1px black;
 }
 
+button.gohome {
+	margin-left: 5%;
+	width: 45%;
+	font-weight: bold;
+	background: linear-gradient(#009900, #003300);
+	color: white;
+	border-color: black;
+	text-shadow: 1px 1px black;
+}
+
+button.gologin {
+	margin-left: 2%;
+	width: 45%;
+	font-weight: bold;
+	background: linear-gradient(#FFFF33, #666600);
+	color: white;
+	border-color: black;
+	text-shadow: 1px 1px black;
+}
+
 div.login {
 	background: white;
 	margin: 5px;
@@ -222,4 +242,11 @@ div.loggedout {
 	background: #cccccc;
 	color: green;
 	margin-top: 10px;
+}
+
+div.error {
+	text-align: center;
+	font-size: 14px;
+	background: #cccccc;
+	color: red;
 }
