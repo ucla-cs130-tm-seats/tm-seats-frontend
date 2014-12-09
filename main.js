@@ -7,6 +7,17 @@ var resetSection = function() {
   }
   zoomedTo = null;
 }
+d3.selection.prototype.dblTap = function(callback) {
+  var last = 0;
+  return this.each(function() {
+    d3.select(this).on("touchstart", function(e) {
+      if ((d3.event.timeStamp - last) < 200) {
+        return callback(this, e);
+      }
+      last = d3.event.timeStamp;
+    });
+  });
+}
 
 var zoomedTo = null;
 
@@ -41,8 +52,13 @@ var displaySegment = function() {
   });
 };
 
-var zoomIn = function() {
-  var coords = d3.mouse(this);
+var zoomIn = function(ele) {
+  var coords;
+  if(ele !== undefined && ele != null) {
+    coords = d3.mouse(ele);
+  } else {
+    coords = d3.mouse(this);
+  }
   zoomLevel = (zoomLevel + 1) % zoomLevels.length;
   if(zoomLevel == 0) {
     resetSection();
@@ -112,7 +128,7 @@ $(document).ready(function() {
       });
       $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.geometry.json", {
         "success": function(data, textStatus, jqXHR) {
-          aa = d3.select(".seatmap").append("svg").on('dblclick', zoomIn).call(pan).attr("class","seatmap-foreground").attr("viewBox","0 0 10240 7680").attr("width","100%").append("g");
+          aa = d3.select(".seatmap").append("svg").dblTap(zoomIn).on('dblclick', zoomIn).call(pan).attr("class","seatmap-foreground").attr("viewBox","0 0 10240 7680").attr("width","100%").append("g");
           $.each(data.shapes, function(i, ele) {
             label = ele.labels[0]
             aaa = aa.append("g").attr("class","section").attr('data-label',label.text).attr('data-segment',ele.segmentId).on('click', displaySegment);
