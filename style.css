@@ -1,6 +1,3 @@
-.section:hover .section-path {
-  fill: #3C3C3C;
-}
 .section {
   cursor: pointer;
 }
