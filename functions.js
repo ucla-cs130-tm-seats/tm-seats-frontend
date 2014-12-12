@@ -1,6 +1,6 @@
 // Redirect Functions
 function goHome() {
-	window.location.href="index.html";	
+	window.location.href="index.html";
 }
 
 function goVenue(id) {
@@ -23,13 +23,13 @@ function goOrderFinished() {
 var updateObj;
 function StartTimer(seconds) {
 	var time = new Date();
-	var startTime = time.getTime();	
-	
+	var startTime = time.getTime();
+
 	if (updateObj) {
 		window.clearInterval(updateObj);
 	}
 	updateObj = window.setInterval(function () {updateTime(startTime, seconds * 1000)}, 500);
-	
+
 	$(".timer").show();
 }
 
@@ -50,9 +50,9 @@ function updateTime(startTime, waitTime) {
 
 function convertDate(date) {
 	var timeString;
-	
+
 	timeString = date.getMinutes() + ":";
-	
+
 	var seconds = date.getSeconds();
 	if (seconds < 10) {
 		timeString += "0" + seconds;
@@ -73,13 +73,13 @@ function setError(error) {
 	$("#errorSection").empty().append(error).show();
 }
 
-// Ticket Search Functions 
+// Ticket Search Functions
 function loadTicketSearch(eventId) {
 	$.getJSON(urlhead + eventId + "/geometry/",
 	function(result) {
-		
+
 		loadSeatmap(result);
-		
+
 		var segmentIds = parseSegmentIds(result);
 		loadPrices(segmentIds);
 	});
@@ -105,7 +105,7 @@ function appendPrice(price) {
 	}
 
 	var index = 1;
-	
+
 	for (var i = 0; i < prices.length; i++) {
 		if (price > prices[i]) {
 			index++;
@@ -125,8 +125,10 @@ function loadPrices(segmentIds) {
 			crossDomain : true,
 			type : "POST",
 			data : {"segment" : segmentIds[i]},
+			data2 : {"segment" : segmentIds[i]},
 			success : function(price, status, obj) {
-				appendPrice(price);
+        pprices[this.data2.segment] = parseFloat(price);
+				appendPrice(parseFloat(price));
 			},
 			error : function(error, status, obj) {
 				alert("error");
@@ -147,13 +149,13 @@ function setLogin() {
 		setError("Invalid Input");
 		return;
 	}
-	
+
 	var info = {};
 	info["username"] = username;
 	info["password"] = password;
 
 	$.ajax({
-		url : urlhead + "login/", 
+		url : urlhead + "login/",
 		crossDomain : true,
 		type : "POST",
 		data : info,
@@ -205,4 +207,34 @@ function getCookie(cname) {
         if (c.indexOf(name) != -1) return c.substring(name.length, c.length);
     }
      return "";
+}
+
+function updatePrice(amt) {
+	var html = $("#amt").html();
+	var price = parseFloat(html.substring(1, html.length - 1));
+	price = price + amt;
+	var toInsert = "$" + price.toFixed(2);
+	$("#amt").html(toInsert);
+}
+
+function addToCart(id) {
+	var cart = getCookie("cart");
+	cart = cart + ":" + id;
+	setCookie("cart", cart, 30);
+}
+
+function removeFromCart(id) {
+	var cart = getCookie("cart");
+	var items = cart.split(':');
+	var newcart = "";
+	for (var i = 0; i < items.length; i++) {
+		if (items[i] != id && items[i]) {
+			newcart = newcart + ':' + id;
+		}
+	}
+	setCookie("cart", newcart, 30);
+}
+
+function showCart() {
+	alert(getCookie("cart"));
 }
