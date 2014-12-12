@@ -27,6 +27,9 @@
 		<script>
 			$(document).ready(function() {
 				checkLogin();
+				QueryString["time"] = "5";
+				checkTimer();
+				updateSummary();
 			});
 		</script>
 	</head>
@@ -45,7 +48,7 @@
 			<!-- Timer -->
 			<div class="row">
 				<div class="col-xs-12 timer">
-					<p id="text">Time Remaining</p><p id="time">8:30</p>
+					<p id="text">Time Remaining</p><p id="time">0:00</p>
 				</div>
 			</div>
 			
@@ -73,112 +76,24 @@
 			</div>
 
 			<div class="row">
-				<table class="table">
+				<table id="ticketList" class="table">
 					<tr>
-						<th></th>
 						<th>section</th>
 						<th>row</th>
 						<th>seat</th>
 						<th>cost</th>
 					</tr>
 					<tr>
-						<td><img class="expand" onclick="toggleInfo(0)" src="plus.png"></td>
-						<td>Upper Mezzanine</td>
-						<td>1A</td>
-						<td>33</td>
-						<td>$33.0</td>
-					</tr>
-					<tr id="tick0" class="extraCost">
-						<td colspan="5">
-							<table class="table">
-								<tr>
-									<td>Adult</td>
-									<td>$173.00</td>
-								</tr>
-								<tr>
-									<td>Service Fee</td>
-									<td>$18.90</td>
-								</tr>
-								<tr>
-									<td>Subtotal</td>
-									<td>$383.80</td>
-								</tr>
-								<tr>
-									<td>Order Processing Fee</td>
-									<td>$6.00</td>
-								</tr>
-								<tr>
-									<td>Tax</td>
-									<td>$0.00</td>
-								</tr>
-								<tr>
-									<td>Total</td>
-									<td>$389.80</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td><img class="expand" onclick="toggleInfo(1)" src="plus.png"></td>
-						<td>Lower Mezzanine</td>
-						<td>23B</td>
-						<td>10</td>
-						<td>$10.0</td>
-					</tr>
-					<tr id="tick1" class="extraCost">
-						<td colspan="5">
-							<table class="table">
-								<tr>
-									<td>Adult</td>
-									<td>$173.00</td>
-								</tr>
-								<tr>
-									<td>Service Fee</td>
-									<td>$18.90</td>
-								</tr>
-								<tr>
-									<td>Subtotal</td>
-									<td>$383.80</td>
-								</tr>
-								<tr>
-									<td>Order Processing Fee</td>
-									<td>$6.00</td>
-								</tr>
-								<tr>
-									<td>Tax</td>
-									<td>$0.00</td>
-								</tr>
-								<tr>
-									<td>Total</td>
-									<td>$389.80</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-					<tr>
-						<td></td>
 						<td>TOTAL</td>
 						<td></td>
 						<td></td>
-						<td style="color: red">$43.0</td>
+						<td id="totalamt" style="color: red">$0.00</td>
 					</tr>
 				</table>
 			</div>
 			
 			<div class="row" style="padding: 10px">
 				<button class="btn btn-default buyticket" onclick="submitOrder()">Buy</button>
-			</div>
-			
-			<div class="row" style="padding: 10px">
-				<button class="btn btn-default buyticket" onclick="addToCart('s_id')">Add</button>
-			</div>
-			
-			<div class="row" style="padding: 10px">
-				<button class="btn btn-default buyticket" onclick="removeFromCart('s_id')">Remove</button>
-			</div>
-			
-			<div class="row" style="padding: 10px">
-				<button class="btn btn-default buyticket" onclick="showCart()">Show</button>
 			</div>
 			
 			<!-- Copyright -->

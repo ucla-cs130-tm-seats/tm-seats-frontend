@@ -6,8 +6,13 @@ class User(models.Model):
   def __str__(self):
     return self.user_name
 
+class User_Seat_Map(models.Model):
+  user = models.CharField(max_length=200)
+  seat = models.CharField(max_length=60)
+
 class Seat(models.Model):
   position = models.CharField(max_length=60)
+  segment = models.CharField(max_length=60)
   def __str__(self):
     return str(self.position)
 

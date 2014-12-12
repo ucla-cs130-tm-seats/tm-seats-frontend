@@ -11,8 +11,14 @@
   left: 0;
   z-index: -1;
 }
-.seatdot {
-  fill: #3C3C3C;
+.seatdot-mine {
+  fill: #58ED62;
+}
+.seatdot-avail {
+  fill: #586EED;
+}
+.seatdot-unavail {
+  fill: #ED5867;
 }
 .seatdot:hover {
   fill: #FFFFFF;

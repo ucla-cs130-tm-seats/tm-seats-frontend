@@ -19,7 +19,6 @@
 		<link rel="stylesheet" type="text/css" href="style.css">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" type="text/javascript" charset="utf-8"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-		<script src="main.js" type="text/javascript"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
 		<script src="functions.js"></script>
 		
@@ -27,6 +26,7 @@
 		<script>
 			$(document).ready(function() {
 				checkLogin();
+				checkTimer();
 			});
 		</script>
 		
@@ -49,7 +49,7 @@
 			<!-- Timer -->
 			<div class="row">
 				<div class="col-xs-12 timer">
-					<p id="text">Time Remaining</p><p id="time">8:30</p>
+					<p id="text">Time Remaining</p><p id="time">0:00</p>
 				</div>
 			</div>
 						

@@ -180,25 +180,27 @@ div.sectionheader {
 
 div.totalcost {
 	background: #cccccc;
-	min-height: 40px;
+	min-height: 60px;
 }
 
 div.totalcost #text {
 	position: absolute;
 	margin-top: 13px;
 	margin-left: -1px;
+	font-size: 20px;
 }
 
 div.totalcost #amt {
 	position: absolute;
 	margin-top: 13px;
-	margin-left: 95px;
+	margin-left: 125px;
+	font-size: 20px;
 	color: red;
 }
 
 div.totalcost button {
 	float: right;
-	margin: 5px -10px;
+	margin-top: 13px;
 	color: white;
 	font-weight: bold;
 	background: linear-gradient(#00cc00, #006600);
@@ -206,6 +208,20 @@ div.totalcost button {
 	text-shadow: 1px 1px black;
 }
 
+div.totalcost #text2 {
+	position: absolute;
+	margin-top: 36px;
+	margin-left: -1px;
+	font-size: 12px;
+}
+
+div.totalcost #ticknum {
+	position: absolute;
+	margin-top: 36px;
+	margin-left: 140px;
+	font-size: 12px;
+	color: green;
+}
 img.expand {
 	width: 30px;
 	height: 30px;
@@ -222,7 +238,8 @@ img.expand {
 div.success {
 	height: 40px;
 	text-align: center;
-	font-size: 28px;
+	font-size: 28:q
+px;
 	background: #cccccc;
 	color: green;
 }
@@ -249,4 +266,8 @@ div.error {
 	font-size: 14px;
 	background: #cccccc;
 	color: red;
+}
+
+.filterbox {
+	padding-bottom: 15px;
 }

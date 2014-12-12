@@ -7,12 +7,16 @@ function goVenue(id) {
 	window.location.href="ticketsearch.html";
 }
 
-function goLogin() {
-	window.location.href="login.html";
+function goLogin(redirect, time) {
+	window.location.href="login.html?page=" + redirect + "&time=" + time;
 }
 
-function goCheckout() {
-	window.location.href="checkout.html";
+function goCheckout(time) {
+	window.location.href="checkout.html?time=" + time;
+}
+
+function goPage(page) {
+	window.location.href=page;
 }
 
 function goOrderFinished() {
@@ -21,7 +25,7 @@ function goOrderFinished() {
 
 // Timing Functions
 var updateObj;
-function StartTimer(seconds) {
+function startTimer(seconds) {
 	var time = new Date();
 	var startTime = time.getTime();
 
@@ -38,6 +42,8 @@ function updateTime(startTime, waitTime) {
 	var currTime = date.getTime();
 	if (currTime >= startTime + waitTime) {
 		window.clearInterval(updateObj);
+		alert("Ran out of Time");
+		goHome();
 	}
 	else {
 		var timer = document.getElementById("time");
@@ -78,15 +84,11 @@ function loadTicketSearch(eventId) {
 	$.getJSON(urlhead + eventId + "/geometry/",
 	function(result) {
 
-		loadSeatmap(result);
 
 		var segmentIds = parseSegmentIds(result);
 		loadPrices(segmentIds);
+		loadSeatmap(result);
 	});
-}
-
-function loadSeatmap(data) {
-
 }
 
 function parseSegmentIds(data) {
@@ -114,7 +116,7 @@ function appendPrice(price) {
 
 	prices[prices.length] = price;
 
-	var formatted = "<option>US $" + price + ".00</option>";
+	var formatted = "<option value=\"" + price + "\">US $" + price + ".00</option>";
 	$("#eventPrices").children(":nth-child(" + index + ")").after(formatted);
 }
 
@@ -128,6 +130,10 @@ function loadPrices(segmentIds) {
 			data2 : {"segment" : segmentIds[i]},
 			success : function(price, status, obj) {
         pprices[this.data2.segment] = parseFloat(price);
+        if(jprices[parseFloat(price)] == undefined) {
+        jprices[parseFloat(price)] = [];
+        }
+        jprices[parseFloat(price)].push(this.data2.segment);
 				appendPrice(parseFloat(price));
 			},
 			error : function(error, status, obj) {
@@ -164,7 +170,7 @@ function setLogin() {
 				setCookie("username", username, 60);
 				setCookie("password", password, 60);
 				alert("Login Successful");
-				goHome();
+				goPage(QueryString["page"]);
 			}
 			else if (data == "1") {
 				setError("Invalid Password");
@@ -174,8 +180,7 @@ function setLogin() {
 			}
 		},
 		error : function (err, status, obj) {
-			alert("login error");
-			alert(status);
+			setError("Server Error");
 		}
 	});
 }
@@ -188,6 +193,43 @@ function checkLogin() {
 		$("#user").empty().append(innerHTML).toggle();
 		$("#loginbutton").toggle();
 	}
+}
+
+function checkTimer() {
+	var minutes = parseInt(QueryString["time"]);
+	if (minutes) {
+		startTimer(minutes * 60);
+	}
+}
+
+function updateSummary() {
+	var seats = getCart();
+	for (var i = 0; i < seats.length; i++) {
+		addRow(seats[i]);
+	}
+}
+
+function addRow(seat) {	
+	var data = seat.split('-');
+	
+	$.ajax({
+	url: urlhead + "get/price/",
+	crossDomain: true,
+	type: "POST",
+	data: { "segment" : data[0] },
+	success: function(price) {
+		$("#ticketList tr:last").before(
+			"<tr>" +
+			"<td>" + data[1] + "</td>" +
+			"<td>" + data[2] + "</td>" +
+			"<td>" + data[3] + "</td>" +
+			"<td>$" + parseFloat(price).toFixed(2) + "</td>" +
+			"</tr>");
+		var html = $("#totalamt").html();
+		var amt = parseFloat(html.substring(1, html.length - 1));
+		amt = amt + parseFloat(price);
+		$("#totalamt").html("$" + amt.toFixed(2));
+	}});
 }
 
 // Cookie Functions
@@ -219,12 +261,18 @@ function updatePrice(amt) {
 
 function addToCart(id) {
 	var cart = getCookie("cart");
-	cart = cart + ":" + id;
+	var newId = id.replace(';', '-').replace(';', '-').replace(';', '-');
+	cart = cart + ":" + newId;
 	setCookie("cart", cart, 30);
+
+	var num = parseInt($("#ticknum").html());
+	num++;
+	$("#ticknum").html(num);
 }
 
 function removeFromCart(id) {
 	var cart = getCookie("cart");
+	var newId = id.replace(';', '-').replace(';', '-').replace(';', '-');
 	var items = cart.split(':');
 	var newcart = "";
 	for (var i = 0; i < items.length; i++) {
@@ -233,8 +281,60 @@ function removeFromCart(id) {
 		}
 	}
 	setCookie("cart", newcart, 30);
+
+	var num = parseInt($("#ticknum").html());
+	num--;
+	$("#ticknum").html(num);
 }
 
-function showCart() {
-	alert(getCookie("cart"));
+function resetCart() {
+	setCookie("cart", "", -1);
 }
+
+function getCart() {
+	var cart =  getCookie("cart").split(':');
+	var uniqueCart = [];
+
+	for (var i = 0; i < cart.length; i++) {
+		if (cart[i] && $.inArray(uniqueCart, cart[i]) == -1) {
+			uniqueCart[uniqueCart.length] = cart[i];
+		}
+	}
+	return uniqueCart;
+}
+
+function reserveTickets() {
+	if (getCookie("username")) {
+		goCheckout("5");
+	}
+	else {
+		goLogin("checkout.html", "8");
+	}
+}
+
+function submitOrder() {
+	goOrderFinished();	
+}
+
+var QueryString = function () {
+  // This function is anonymous, is executed immediately and
+  // the return value is assigned to QueryString!
+  var query_string = {};
+  var query = window.location.search.substring(1);
+  var vars = query.split("&");
+  for (var i=0;i<vars.length;i++) {
+    var pair = vars[i].split("=");
+    	// If first entry with this name
+    if (typeof query_string[pair[0]] === "undefined") {
+      query_string[pair[0]] = pair[1];
+    	// If second entry with this name
+    } else if (typeof query_string[pair[0]] === "string") {
+      var arr = [ query_string[pair[0]], pair[1] ];
+      query_string[pair[0]] = arr;
+    	// If third or later entry with this name
+    } else {
+      query_string[pair[0]].push(pair[1]);
+    }
+  }
+    return query_string;
+} ();

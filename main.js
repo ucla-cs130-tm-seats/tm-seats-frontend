@@ -1,4 +1,8 @@
 var qt;
+var pprices = {};
+var jprices = {};
+
+var apiurl = "http://tm-dev.glentaka.com:8000/ticketmaster";
 
 d3.selection.prototype.dblTap = function(callback) {
   var last = 0;
@@ -51,24 +55,72 @@ var zoom = function(x, y, level) {
 
 var oldSections;
 
+var xhrs = {};
+
 var resetSection = function(ele) {
+  if(xhrs[$(ele).data('segment')] !== undefined && xhrs[$(ele).data('segment')] !== null) {
+    xhrs[$(ele).data('segment')].abort();
+    xhrs[$(ele).data('segment')] = null;
+  }
   d3.select(ele).select('.seats').remove();
   d3.select(ele).select('text').attr('opacity','1');
+  d3.select(ele).select('path').attr('opacity','1');
 }
 
+var seats = [];
+
 var displaySection = function(ele) {
-  //change the background to be white temporarily and hide text
-  //display the seats
-  $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21." + $(ele).data('segment') + ".places.json", {
+  if(xhrs[$(ele).data('segment')] !== undefined && xhrs[$(ele).data('segment')] !== null) {
+    xhrs[$(ele).data('segment')].abort();
+    xhrs[$(ele).data('segment')] = null;
+  }
+  xhrs[$(ele).data('segment')] = $.ajax(apiurl + "/checkAvailability/" , {
+    "type": "POST",
+    "data": {"segment": $(ele).data('segment')},
     "success": function(data, textStatus, jqXHR) {
-      var g = d3.select(ele).append('g').attr('class','seats');
-      d3.select(ele).select('text').attr('opacity','0.3');
-      $.each(data.places, function(i, place) {
-        g.append('circle').attr('r',place.size/2).attr('cx',place.x).attr('cy',place.y).attr("class","seatdot");
+      var avaibls = [];
+      for(var i in data) {
+        avaibls.push(data[i].fields.position);
+      }
+      xhrs[$(ele).data('segment')] = $.ajax(apiurl + "/get/place/" , {
+        "type": "POST",
+      "data": {"segment": $(ele).data('segment')},
+      "success": function(data, textStatus, jqXHR) {
+        var g = d3.select(ele).append('g').attr('class','seats');
+        d3.select(ele).select('text').attr('opacity','0.3');
+        d3.select(ele).select('path').attr('opacity','0.6');
+        $.each(data.places, function(i, place) {
+          var qqq = g.append('circle').attr('r',place.size/2).attr('cx',place.x).attr('cy',place.y).attr("class","seatdot-unavail").attr("data-seat",place.placeId);
+          var zzz = function() {qqq.on("click", function() {
+            d3.select(this).on("click",function() {
+              updatePrice(-1 * pprices[$(this).parent().parent().data("segment")]);
+              seats.splice($.inArray($(this).data('seat'),seats), 1);
+              removeFromCart($(this).data('seat'));
+              zzz();
+            }).attr("class", "seatdot-mine");
+            updatePrice(pprices[$(this).parent().parent().data("segment")]);
+            seats.push($(this).data('seat'));
+            addToCart($(this).data('seat'));
+          }).attr("class", "seatdot-avail");
+          };
+
+          if($.inArray(place.placeId, seats) > -1) {
+            qqq.on("click",function() {
+              updatePrice(-1 * pprices[$(this).parent().parent().data("segment")]);
+              seats.splice($.inArray($(this).data('seat'),seats), 1);
+              removeFromCart($(this).data('seat'));
+              zzz();
+            }).attr("class", "seatdot-mine");
+          } else if($.inArray(place.placeId, avaibls) > -1) {
+            zzz();
+          }
+        });
+        xhrs[$(ele).data('segment')] = null;
+      },
+      "error": function(data, textStatus, jqXHR) {
+        resetSection(ele);
+      }
       });
-    },
-    "error": function(data, textStatus, jqXHR) {
-      resetSection(ele);
     }
   });
 };
@@ -99,6 +151,20 @@ var displaySections = function(bbox) {
     displaySection(newSections[i]);
   }
   oldSections = temp;
+}
+
+var filterByPrice = function() {
+  var price = $('#eventPrices').val();
+  var segs = jprices[price];
+  var asdf = d3.selectAll(".section");
+  for(var a in asdf[0]) {
+    var seg = $(asdf[0][a]).data('segment');
+    if(price == 0 || $.inArray(seg, segs) == -1) {
+      d3.select(asdf[0][a]).select('path').attr("stroke","darkgrey").attr("stroke-width",2);
+    } else {
+      d3.select(asdf[0][a]).select('path').attr("stroke","yellow").attr("stroke-width",50);
+    }
+  }
 }
 
 var panDrag = function(d, i) {
@@ -150,14 +216,15 @@ var availToColor = function (avail) {
   }
 };
 
+
 $(document).ready(function() {
-  $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.availabilitySummary.json", {
+  $.ajax(apiurl+"/0F004CFCCA844D21/summary/", {
     "success": function(data, textStatus, jqXHR) {
       avail = {}
-      $.each(data.segments, function(i, seg) {
-        avail[seg.segmentId] = { "avail": seg.placesAvailable, "total": seg.placesTotal };
+      $.each(data, function(i, seg) {
+        avail[seg.fields.segmentId] = { "avail": seg.fields.placesAvailable, "total": seg.fields.placesTotal };
       });
-      $.ajax("event-data/0F004CFCCA844D21/0F004CFCCA844D21.geometry.json", {
+      $.ajax(apiurl+"/0F004CFCCA844D21/geometry/", {
         "success": function(data, textStatus, jqXHR) {
           aa = d3.select(".seatmap").append("svg").dblTap(zoomIn).on('dblclick', zoomIn).call(pan).attr("class","seatmap-foreground").attr("viewBox","0 0 10240 7680").attr("width","100%").append("g");
           var points = [];
@@ -168,86 +235,15 @@ $(document).ready(function() {
             path = aaa.append("path").attr("d",ele.path).attr("stroke","darkgrey").attr("stroke-width",2).attr("fill",availToColor(avail[ele.segmentId].avail/avail[ele.segmentId].total)).attr("class","section-path");
             var bbox = path.node().getBBox();
             //heheheh we are cheating. (should use r-tree instead of quadtree)
-            points.push({
-              'x': bbox.x,
-              'y': bbox.y,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width / 3,
-              'y': bbox.y,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width * 2 / 3,
-              'y': bbox.y,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width,
-              'y': bbox.y,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x,
-              'y': bbox.y + bbox.height / 3,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x,
-              'y': bbox.y + bbox.height * 2 / 3,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x,
-              'y': bbox.y + bbox.height,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width / 3,
-              'y': bbox.y + bbox.height * 2 / 3,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width * 2 / 3,
-              'y': bbox.y + bbox.height / 3,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width / 3,
-              'y': bbox.y + bbox.height / 3,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width * 2 / 3,
-              'y': bbox.y + bbox.height * 2 / 3,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width,
-              'y': bbox.y + bbox.height,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width / 3,
-              'y': bbox.y + bbox.height,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width * 2 / 3,
-              'y': bbox.y + bbox.height,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width / 3,
-              'y': bbox.y + bbox.height,
-              'section': aaa.node(),
-            });
-            points.push({
-              'x': bbox.x + bbox.width,
-              'y': bbox.y + bbox.height * 2 / 3,
-              'section': aaa.node(),
-            });
+            for(var i = 0; i <= 5; i++) {
+              for(var j = 0; j <= 5; j++) {
+                points.push({
+                  'x': bbox.x + bbox.width * i / 5,
+                  'y': bbox.y + bbox.height * j / 5,
+                  'section': aaa.node(),
+                });
+              }
+            }
             if (label.size == 0) {
               label.size = 150;
             }

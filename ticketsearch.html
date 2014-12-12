@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.13/d3.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>
+    <!--<script src="//ajax.googleapis.com/ajax/libs/jquerymobile/1.4.3/jquery.mobile.min.js"></script>-->
     <script src="main.js" type="text/javascript"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
     <script src="functions.js"></script>
@@ -28,6 +28,7 @@
     $(document).ready(function() {
       checkLogin();
       loadTicketSearch("0F004CFCCA844D21");
+      resetCart();
     });
     </script>
   </head>
@@ -39,7 +40,7 @@
       <div class="row tmtitle">
         <div class="col-xs-12 logo">
           <input type="image" src="tmus_logo2x.png" onclick="goHome()" alt="ticketmaster"/>
-          <button id="loginbutton" type="button" class="btn btn-info" onclick="goLogin()" type="submit">Login</button>
+          <button id="loginbutton" type="button" class="btn btn-info" onclick="goLogin('ticketsearch.html')" type="submit">Login</button>
           <p id="user"></p>
         </div>
       </div>
@@ -67,8 +68,9 @@
 
       <div class="row">
         <div class="col-xs-12 totalcost">
-          <p id="text">SUBTOTAL: </p><p id="amt">$100.00</p>
-          <button class="btn btn-default" onclick="goCheckout()">Continue</button>
+          <p id="text">SUBTOTAL: </p><p id="amt">$0.00</p>
+          <button class="btn btn-default" onclick="reserveTickets()">Continue</button>
+          <p id="text2">NUMBER OF TICKETS: </p><p id="ticknum">0</p>
         </div>
       </div>
 
@@ -273,16 +275,13 @@
       <div class="row sectionheader">
         Tickets
       </div>
-      <div class="row">
+      <div class="row filterbox">
         <p style="margin: 10px 0px 10px 11px">Full Price Ticket</p>
         <div class="col-xs-12">
-          <select class="form-control" id="eventPrices">
-            <option>Any Price</option>
+          <select class="form-control" id="eventPrices" onchange="filterByPrice()">
+            <option value="0">Any Price</option>
           </select>
         </div>
-      </div>
-      <div class="row" style="padding: 10px 0px">
-        <button type="button" class="btn btn-default findticket" onclick="findTickets()">Update Seatmap</button>
       </div>
 
       <!-- Copyright -->

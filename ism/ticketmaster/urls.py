@@ -7,8 +7,9 @@ urlpatterns = [
     url(r'^[A-Z0-9]{16}/summary/$', views.summary),
     url(r'^get/price/$', views.getSegPrice),
     url(r'^filter/price/$', views.filterByPrice),
-    url(r'^reserve/$', views.reserve),
+    url(r'^reserveseats/$', views.reserveseats),
     url(r'^login/$', views.validate),
     url(r'^get/place/$', views.getSegPlace),
+    url(r'^checkAvailability/$', views.checkAvailability),
 ]
 
