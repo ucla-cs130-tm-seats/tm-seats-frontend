@@ -7,7 +7,8 @@ data = json.load(json_data)
 if 'availablePlaces' in data:
   availablePlaces = data['availablePlaces']
   for place in availablePlaces:
-    seat = Seat.objects.get_or_create(position=place)
+    seg = place.rsplit(';',3)[0]
+    seat = Seat.objects.get_or_create(position=place, segment=seg)
 
 
 

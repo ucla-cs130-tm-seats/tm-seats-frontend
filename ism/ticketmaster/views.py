@@ -54,9 +54,34 @@ def getSegPlace(request):
     
 @csrf_exempt
 def reserveseats(request):
-    return HttpResponse("hello")
-    #req = request.POST["values"]
-    #return HttpResponse(req)
+    requestPosition = request.POST["position"]
+
+    splitRequest = requestPosition.split(';',1)
+    seatSegment = splitRequest[0]
+
+    isSeatAvail = Seat.objects.filter(position=requestPosition).count()
+
+    if isSeatAvail == 1:
+        TotalQuerySet = Segment.objects.filter(segmentId="Total").values('placesAvailable')
+        oldTotalPlacesAvail = float(TotalQuerySet[0]['placesAvailable'])
+        newTotalPlacesAvail = oldTotalPlacesAvail-1.0
+
+        Segment.objects.filter(segmentId="Total").update(placesAvailable=newTotalPlacesAvail)
+
+        SegQuerySet = Segment.objects.filter(segmentId=seatSegment).values('placesAvailable')
+        oldPlacesAvail = float(SegQuerySet[0]['placesAvailable'])
+        newPlacesAvail = oldPlacesAvail-1.0
+
+        Segment.objects.filter(segmentId=seatSegment).update(placesAvailable=newPlacesAvail)
+
+        SeatQuerySet = Seat.objects.filter(position=requestPosition).delete()
+
+        return HttpResponse("0")
+        #return HttpResponse("Your Seat Has Been Reserved.\nSeat Position: %s\nOld Availability: %d, New Availability: %d\n\nOld Total Availability: %d, New Total Availability: %d" %(requestPosition,oldPlacesAvail,newPlacesAvail,oldTotalPlacesAvail,newTotalPlacesAvail))
+    else:
+        return HttpResponse("1")
+        #return HttpResponse("We're sorry. Seat %s is not available." %requestPosition)
+
 
 @csrf_exempt
 def validate(request):

@@ -137,7 +137,7 @@ function loadPrices(segmentIds) {
 				appendPrice(parseFloat(price));
 			},
 			error : function(error, status, obj) {
-				alert("error");
+				setError("server price error");
 			}
 		});
 	}
@@ -180,7 +180,7 @@ function setLogin() {
 			}
 		},
 		error : function (err, status, obj) {
-			setError("Server Error");
+			setError("Server Login Error");
 		}
 	});
 }
@@ -272,12 +272,13 @@ function addToCart(id) {
 
 function removeFromCart(id) {
 	var cart = getCookie("cart");
+	alert(cart);
 	var newId = id.replace(';', '-').replace(';', '-').replace(';', '-');
 	var items = cart.split(':');
 	var newcart = "";
 	for (var i = 0; i < items.length; i++) {
-		if (items[i] != id && items[i]) {
-			newcart = newcart + ':' + id;
+		if (items[i] != newId && items[i]) {
+			newcart = newcart + ':' + newId;
 		}
 	}
 	setCookie("cart", newcart, 30);
@@ -304,16 +305,43 @@ function getCart() {
 }
 
 function reserveTickets() {
-	if (getCookie("username")) {
-		goCheckout("5");
+	var cart = getCart();
+	if (cart != "") {
+		if (getCookie("username")) {
+			goCheckout("5");
+		}
+		else {
+			goLogin("checkout.html", "8");
+		}
 	}
 	else {
-		goLogin("checkout.html", "8");
+		alert("No Seats Selected!");
 	}
 }
 
 function submitOrder() {
-	goOrderFinished();	
+	var cart = getCart();
+
+	for (var i = 0; i < cart.length; i++) {
+		var seat = cart[i].replace('-', ';').replace('-', ';').replace('-', ';');
+		$.ajax({
+		url: urlhead + "reserveseats/",
+		crossDomain: true,
+		type: "POST",
+		data: { "position" : seat },
+		success: function(result) {
+			if (result == "0") {
+			}
+			else if (result == "1") {
+				setError("Cannot Reserve Seat!");
+			}
+		},
+		error: function(jqHXR, status, err) {
+			setError("Server Reserve Errror");
+		}
+		});
+	}
+	goOrderFinished();
 }
 
 var QueryString = function () {
