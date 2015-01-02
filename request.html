@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+  $("button").click(function(){
+    $.getJSON("http://tm-dev.glentaka.com:8000/ticketmaster/0F004CFCCA844D21/summary/",function(result){
+      });
+    });
+  });
+
+</script>
+
+</head>
+<body>
+
+<button>Get Content</button>
+
+</body>
+
+</html>

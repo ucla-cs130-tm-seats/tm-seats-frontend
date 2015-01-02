@@ -1,0 +1,32 @@
+<DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+  $("button").click(function(){
+    $.ajax({
+      url : "http://tm-dev.glentaka.com:8000/ticketmaster/get/place/",
+      crossDomain: true,
+      type : "POST",
+      data : {"segment" : "s_91"},
+      success: function(data)
+      {
+      }
+    });
+  });
+});
+
+</script>
+
+</head>
+<body>
+
+<div></div>
+<button>Get Content</button>
+
+</body>
+
+</html>

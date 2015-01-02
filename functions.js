@@ -42,7 +42,6 @@ function updateTime(startTime, waitTime) {
 	var currTime = date.getTime();
 	if (currTime >= startTime + waitTime) {
 		window.clearInterval(updateObj);
-		alert("Ran out of Time");
 		goHome();
 	}
 	else {
@@ -87,7 +86,7 @@ function loadTicketSearch(eventId) {
 
 		var segmentIds = parseSegmentIds(result);
 		loadPrices(segmentIds);
-		loadSeatmap(result);
+		//loadSeatmap(result);
 	});
 }
 
@@ -169,7 +168,6 @@ function setLogin() {
 			if (data == "0") {
 				setCookie("username", username, 60);
 				setCookie("password", password, 60);
-				alert("Login Successful");
 				goPage(QueryString["page"]);
 			}
 			else if (data == "1") {
@@ -209,9 +207,9 @@ function updateSummary() {
 	}
 }
 
-function addRow(seat) {	
+function addRow(seat) {
 	var data = seat.split('-');
-	
+
 	$.ajax({
 	url: urlhead + "get/price/",
 	crossDomain: true,
@@ -272,13 +270,12 @@ function addToCart(id) {
 
 function removeFromCart(id) {
 	var cart = getCookie("cart");
-	alert(cart);
 	var newId = id.replace(';', '-').replace(';', '-').replace(';', '-');
 	var items = cart.split(':');
 	var newcart = "";
 	for (var i = 0; i < items.length; i++) {
 		if (items[i] != newId && items[i]) {
-			newcart = newcart + ':' + newId;
+			newcart = newcart + ':' + items[i];
 		}
 	}
 	setCookie("cart", newcart, 30);
@@ -315,7 +312,6 @@ function reserveTickets() {
 		}
 	}
 	else {
-		alert("No Seats Selected!");
 	}
 }
 

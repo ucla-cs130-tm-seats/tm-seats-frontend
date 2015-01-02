@@ -1,0 +1,35 @@
+<DOCTYPE html>
+<html>
+<head>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+<script>
+
+$(document).ready(function(){
+  $("button").click(function(){
+    $.ajax({
+      url : "http://tm-dev.glentaka.com:8000/ticketmaster/reserveseats/",
+      crossDomain: true,
+      type : "POST",
+      data : {"position":"s_92;302;35;16"},
+      success: function(result, status, jqHxr)
+      {
+      },
+      error: function(jqXHR, status, err)
+      {
+      }
+    });
+  });
+});
+
+</script>
+
+</head>
+<body>
+
+<div></div>
+<button>Get Content</button>
+
+</body>
+
+</html>
